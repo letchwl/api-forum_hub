@@ -30,7 +30,7 @@ Forum Hub é uma API REST inspirada no fórum da Alura, criada com o objetivo de
 
 1. Clone este repositório:
    ```bash
-   git clone https://github.com/seu-usuario/forum-hub.git
+   git clone https://github.com/letchwl/forum-hub.git
    
 2. Abra o projeto na sua IDE (recomendo o IntelliJ IDEA).
 3. Configure o banco de dados PostgreSQL com as credenciais no application.properties
