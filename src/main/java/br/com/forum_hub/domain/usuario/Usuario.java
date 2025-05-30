@@ -53,8 +53,11 @@ public class Usuario implements UserDetails {
     public String getMiniBiografia() {
         return miniBiografia;
     }
+<<<<<<< HEAD
 
     public Long getId() {
         return id;
     }
+=======
+>>>>>>> f27b355b982a2c718f6004e6a4e1f124445ab2d3
 }
