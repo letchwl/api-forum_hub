@@ -1,9 +1,0 @@
-CREATE TABLE usuarios (
-    id BIGSERIAL PRIMARY KEY,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    senha VARCHAR(100) NOT NULL,
-    nome_completo VARCHAR(100) NOT NULL,
-    nome_usuario VARCHAR(100) NOT NULL UNIQUE,
-    mini_biografia VARCHAR(30),
-    biografia TEXT
-);
