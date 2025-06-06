@@ -23,18 +23,18 @@ public class SecurityConfigurations {
     }
 
     @Bean
-    public SecurityFilterChain securityFilter(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filtrosSeguranca(HttpSecurity http) throws Exception {
         return http
-                .authorizeHttpRequests(req ->{
-                    req.requestMatchers("/login").permitAll();
-                    req.anyRequest().authenticated();
-                    }
+                .authorizeHttpRequests(
+                        req -> {
+                            req.requestMatchers("/login", "/atualizar-token", "/registrar", "verificar-conta").permitAll();
+                            req.anyRequest().authenticated();
+                        }
                 )
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(csrf -> csrf.disable())
                 .addFilterBefore(filtroTokenAcesso, UsernamePasswordAuthenticationFilter.class)
                 .build();
-        
     }
 
     @Bean
