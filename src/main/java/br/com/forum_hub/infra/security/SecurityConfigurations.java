@@ -31,6 +31,19 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(
                         req -> {
                             req.requestMatchers("/login", "/atualizar-token", "/registrar", "verificar-conta").permitAll();
+                            req.requestMatchers(HttpMethod.GET, "/cursos").permitAll();
+
+                            req.requestMatchers(HttpMethod.GET, "/topicos/**").permitAll();
+                            req.requestMatchers(HttpMethod.POST, "/topicos/").hasRole("ESTUDANTE");
+                            req.requestMatchers(HttpMethod.PUT, "/topicos/").hasRole("ESTUDANTE");
+                            req.requestMatchers(HttpMethod.DELETE, "/topicos/**").hasRole("ESTUDANTE");
+
+                            req.requestMatchers(HttpMethod.PATCH, "/topicos/{idTopico/resposta/**}").hasAnyRole("INSTRUTOR", "ESTUDANTE");
+
+                            req.requestMatchers(HttpMethod.PATCH, "/topicos/**").hasRole("MODERADOR");
+
+                            req.requestMatchers(HttpMethod.PATCH, "/adicionar-perfil/**").hasRole("ADMIN");
+
                             req.anyRequest().authenticated();
                         }
                 )
