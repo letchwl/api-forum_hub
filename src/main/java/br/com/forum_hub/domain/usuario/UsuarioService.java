@@ -6,6 +6,7 @@ import br.com.forum_hub.domain.perfil.PerfilRepository;
 import br.com.forum_hub.infra.email.EmailService;
 import br.com.forum_hub.infra.exception.RegraDeNegocioException;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -84,6 +85,15 @@ public class UsuarioService implements UserDetailsService {
         var usuario = usuarioRepository.findById(id).orElseThrow();
         var perfil = perfilRepository.findByNome(dados.perfilNome());
         usuario.adicionarPerfil(perfil);
+
+        return usuario;
+    }
+
+    @Transactional
+    public Usuario removerPerfil(Long id, @Valid DadosPerfil dados) {
+        var usuario = usuarioRepository.findById(id).orElseThrow();
+        var perfil = perfilRepository.findByNome(dados.perfilNome());
+        usuario.removerPerfil(perfil);
 
         return usuario;
     }
