@@ -1,6 +1,8 @@
 package br.com.forum_hub.domain.usuario;
 
+import br.com.forum_hub.domain.perfil.DadosPerfil;
 import br.com.forum_hub.domain.perfil.PerfilNome;
+import br.com.forum_hub.domain.perfil.PerfilRepository;
 import br.com.forum_hub.infra.email.EmailService;
 import br.com.forum_hub.infra.exception.RegraDeNegocioException;
 import jakarta.transaction.Transactional;
@@ -16,11 +18,13 @@ public class UsuarioService implements UserDetailsService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final PerfilRepository perfilRepository;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, EmailService emailService) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, EmailService emailService, PerfilRepository perfilRepository) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
+        this.perfilRepository = perfilRepository;
     }
 
     @Override
@@ -33,7 +37,8 @@ public class UsuarioService implements UserDetailsService {
     public Usuario cadastrar(DadosCadastroUsuario dados) {
         var senhaCriptografada = passwordEncoder.encode(dados.senha());
 
-        var usuario = new Usuario(dados, senhaCriptografada);
+        var perfil = perfilRepository.findByNome(PerfilNome.ESTUDANTE);
+        var usuario = new Usuario(dados, senhaCriptografada, perfil);
 
         emailService.enviarEmailVerificacao(usuario);
         return usuarioRepository.save(usuario);
@@ -72,5 +77,14 @@ public class UsuarioService implements UserDetailsService {
     @Transactional
     public void desativarUsuario(Usuario usuario) {
         usuario.desativar();
+    }
+
+    @Transactional
+    public Usuario adicionarPerfil(Long id, DadosPerfil dados) {
+        var usuario = usuarioRepository.findById(id).orElseThrow();
+        var perfil = perfilRepository.findByNome(dados.perfilNome());
+        usuario.adicionarPerfil(perfil);
+
+        return usuario;
     }
 }

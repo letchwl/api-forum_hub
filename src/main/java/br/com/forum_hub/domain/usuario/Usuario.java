@@ -14,10 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name="usuarios")
@@ -36,14 +33,17 @@ public class Usuario implements UserDetails {
     private String token;
     private LocalDateTime expiracaoToken;
     private Boolean ativo;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "usuarios_perfis",
             joinColumns = @JoinColumn(name = "usuario_id"),
             inverseJoinColumns = @JoinColumn(name = "perfil_id"))
-    private List<Perfil> perfis = new ArrayList<>();
+    private Set<Perfil> perfis = new HashSet<>();
 
     @Deprecated
     public Usuario(DadosCadastroUsuario dados, String senhaCriptografada){}
+
+    public Usuario() {}
 
     public Usuario(DadosCadastroUsuario dados, String senhaCriptografada, Perfil perfil) {
         this.nomeCompleto = dados.nomeCompleto();
@@ -56,6 +56,7 @@ public class Usuario implements UserDetails {
         this.token = UUID.randomUUID().toString();
         this.expiracaoToken = LocalDateTime.now().plusMinutes(30);
         this.ativo = false;
+        this.perfis = new HashSet<>();
         this.perfis.add(perfil);
     }
 
